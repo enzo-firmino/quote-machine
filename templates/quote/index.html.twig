@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des citations{% endblock %}
+
+{% block body %}
+    <h1>Liste des citations</h1>
+
+    <ul class="list-unstyled">
+        {% for quote in quotes %}
+            <li>
+                {{ include('quote/_quote.html.twig', {quote: quote}) }}
+            </li>
+        {% else %}
+            <li>Aucun résultat trouvé</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

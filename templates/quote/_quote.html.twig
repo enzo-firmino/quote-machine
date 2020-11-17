@@ -1,0 +1,12 @@
+<blockquote class="blockquote">
+    <p class="mb-0">{{ quote.content }}</p>
+    <footer class="blockquote-footer">
+        <cite>{{ quote.meta }}</cite>
+        {% if quote.category %}
+            <a href="{{ path('category_show', {id: quote.category.id}) }}"><span class="badge badge-dark">{{ quote.category.name }}</span></a>
+        {% endif %}
+        <span class="ml-2">
+            <a href="{{ path('quote_edit', {id: quote.id}) }}">Modifier</a> | <a href="{{ path('quote_delete', {id: quote.id}) }}">Supprimer</a>
+        </span>
+    </footer>
+</blockquote>
