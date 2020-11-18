@@ -19,7 +19,9 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('quote_new') }}">Ajouter une citation</a>
+                        {% if is_granted('ROLE_USER') %}
+                            <a class="nav-link" href="{{ path('quote_new') }}">Ajouter une citation</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('category_index') }}">Catégories</a>

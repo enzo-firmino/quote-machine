@@ -14,10 +14,11 @@
     </ul>
 
     <div class="d-flex">
+        {% if is_granted('ROLE_ADMIN') %}
         <a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-secondary mr-2">
             Modifier la catégorie
         </a>
-
         {{ include('category/_delete_form.html.twig') }}
+        {% endif %}
     </div>
 {% endblock %}
