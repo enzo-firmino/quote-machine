@@ -4,9 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     public const NAME = 'enzo';
 
@@ -18,12 +19,11 @@ class UserFixtures extends Fixture
         $user->setPassword('symfony');
         $manager->persist($user);
 
-        $user = new User();
-        $user->setName('Enzo2');
-        $user->setEmail('firmino.enzo@hotmail.fr');
-        $user->setPassword('symfony');
-        $manager->persist($user);
-
         $manager->flush();
+    }
+
+    public static function getGroups(): array
+    {
+        return ['tests'];
     }
 }

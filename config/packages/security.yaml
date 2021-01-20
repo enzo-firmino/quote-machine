@@ -16,6 +16,16 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            anonymous: true
+            provider: app_user_provider
+            http_basic:
+                realm: Secured Area
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
         main:
             anonymous: lazy
             provider: app_user_provider

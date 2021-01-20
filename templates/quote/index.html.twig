@@ -6,7 +6,7 @@
     <h1>Liste des citations</h1>
 
     <ul class="list-unstyled">
-        {% for quote in quotes %}
+            {% for quote in quotes %}
             <li>
                 {{ include('quote/_quote.html.twig', {quote: quote}) }}
             </li>
