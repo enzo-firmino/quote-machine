@@ -2,11 +2,13 @@
     <p class="mb-0">{{ quote.content }}</p>
     <footer class="blockquote-footer">
         <cite>{{ quote.meta }}</cite>
+        <a href="{{  path('user_profil', {id: quote.auteur.id}) }}">{{ quote.auteur.name }}</a>
+        <p>{{ quote.dateCreation|date('Y-m-d') }}</p>
         {% if quote.category %}
             <a href="{{ path('category_show', {id: quote.category.id}) }}"><span class="badge badge-dark">{{ quote.category.name }}</span></a>
         {% endif %}
         <span class="ml-2">
-            {% if is_granted('ROLE_USER') %}
+            {% if is_granted('edit', quote) and is_granted('delete', quote)  %}
             <a href="{{ path('quote_edit', {id: quote.id}) }}">Modifier</a> | <a href="{{ path('quote_delete', {id: quote.id}) }}">Supprimer</a>
             {% endif %}
         </span>

@@ -3,18 +3,23 @@
 namespace App\Controller;
 
 use App\Entity\Quote;
+use App\Event\QuoteCreated;
 use App\Form\QuoteType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 
 class QuoteController extends AbstractController
 {
     /**
      * @Route("/quotes", name="quote_index")
+     * @param Request $request
+     * @return Response
      */
     public function index(Request $request): Response
     {
@@ -37,8 +42,11 @@ class QuoteController extends AbstractController
      * @Route("/quotes/new", name="quote_new", methods={"GET", "POST"})
      *
      * @IsGranted("ROLE_USER")
+     * @param Request $request
+     * @param EventDispatcherInterface $eventDispatcher
+     * @return RedirectResponse|Response
      */
-    public function new(Request $request)
+    public function new(Request $request, EventDispatcherInterface $eventDispatcher)
     {
         $quote = new Quote();
 
@@ -50,7 +58,8 @@ class QuoteController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($quote);
             $entityManager->flush();
-
+            $event = new QuoteCreated($quote);
+            $eventDispatcher->dispatch($event);
             return $this->redirectToRoute('quote_index');
         }
 
@@ -63,13 +72,18 @@ class QuoteController extends AbstractController
     /**
      * @Route("/quotes/{id}/edit", name="quote_edit", methods={"GET", "POST"})
      *
-     * @IsGranted("ROLE_USER")
+     * @param Request $request
+     * @param Quote $quote
+     * @return Response
      */
     public function edit(Request $request, Quote $quote): Response
     {
         $form = $this->createForm(QuoteType::class, $quote);
 
         $form->handleRequest($request);
+
+        $this->denyAccessUnlessGranted('edit', $quote);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
@@ -86,10 +100,14 @@ class QuoteController extends AbstractController
     /**
      * @Route("/quotes/{id}/delete", name="quote_delete", methods={"GET"})
      *
-     * @IsGranted("ROLE_USER")
+     * @param Quote $quote
+     * @return Response
      */
     public function delete(Quote $quote): Response
     {
+
+        $this->denyAccessUnlessGranted('delete', $quote);
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($quote);
         $entityManager->flush();

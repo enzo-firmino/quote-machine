@@ -14,6 +14,7 @@
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^5.1",
+        "stof/doctrine-extensions-bundle": "^1.5",
         "symfony/asset": "4.4.*",
         "symfony/console": "4.4.*",
         "symfony/dotenv": "4.4.*",
@@ -89,6 +90,7 @@
         "db": [
             "php bin/console doctrine:database:drop --force --if-exists",
             "php bin/console doctrine:database:create",
+            "php bin/console make:migration",
             "php bin/console doctrine:migration:migrate --no-interaction",
             "php bin/console doctrine:fixtures:load --no-interaction"
         ],

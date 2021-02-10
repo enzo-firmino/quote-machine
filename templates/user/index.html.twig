@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+    <h1>Profil</h1>
+
+    <ul class="list-unstyled">
+        <li>
+          Name : {{ user.name }}
+        </li>
+        <li>
+            Date d'inscription : {{ user.dateInscription|date('Y-m-d') }}
+        </li>
+        <li>
+            <p>Liste quotes : </p>
+            <ul class="list-unstyled">
+                {% for quote in quotes %}
+                    <li>
+                        {{ include('quote/_quote.html.twig', {quote: quote}) }}
+                    </li>
+                {% else %}
+                    <li>Aucun résultat trouvé</li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+{% endblock %}
