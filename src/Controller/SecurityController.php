@@ -13,8 +13,6 @@ class SecurityController extends AbstractController
 {
     /**
      * @Route("/login", name="app_login")
-     * @param AuthenticationUtils $authenticationUtils
-     * @return Response
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -38,13 +36,10 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-
     /**
      * @Route("/user/{id}", name="user_profil", methods={"GET"})
-     * @param User $user
-     * @return Response
      */
-    public function profil(User $user) : Response
+    public function profil(User $user): Response
     {
         $queryBuilder = $this->getDoctrine()
             ->getRepository(Quote::class)
@@ -53,11 +48,12 @@ class SecurityController extends AbstractController
         $queryBuilder = $queryBuilder->where('q.auteur = :auteur')
                 ->setParameter('auteur', $user);
 
-         return $this->render('user/index.html.twig', ['user' => $user, 'quotes' => $queryBuilder->getQuery()->getResult(),]);
+        return $this->render('user/index.html.twig', ['user' => $user, 'quotes' => $queryBuilder->getQuery()->getResult()]);
     }
 
     /**
      * @Route("/user", name="user_own_profil")
+     *
      * @return Response
      */
     public function ownProfil()
@@ -70,6 +66,6 @@ class SecurityController extends AbstractController
         $queryBuilder = $queryBuilder->where('q.auteur = :auteur')
             ->setParameter('auteur', $user);
 
-        return $this->render('user/index.html.twig', ['user' => $user, 'quotes' => $queryBuilder->getQuery()->getResult(),]);
+        return $this->render('user/index.html.twig', ['user' => $user, 'quotes' => $queryBuilder->getQuery()->getResult()]);
     }
 }

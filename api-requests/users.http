@@ -1,0 +1,14 @@
+GET http://localhost:8000/api/users
+Accept: application/ld+json
+
+###
+
+GET http://localhost:8000/api/users?name=floran
+Accept: application/ld+json
+
+###
+
+GET http://localhost:8000/api/users/1
+Accept: application/ld+json
+
+###

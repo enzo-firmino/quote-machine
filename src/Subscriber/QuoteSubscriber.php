@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Subscriber;
 
 use App\Entity\User;
@@ -25,5 +26,4 @@ class QuoteSubscriber implements EventSubscriberInterface
             ->set('u.experience', '?1')
             ->setParameter(1, $experience);
     }
-
 }

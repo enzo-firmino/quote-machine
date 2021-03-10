@@ -1,0 +1,40 @@
+GET http://localhost:8000/api/categories
+Accept: application/ld+json
+
+###
+
+GET http://localhost:8000/api/categories?name=kaamelott
+Accept: application/ld+json
+
+###
+
+GET http://localhost:8000/api/categories/1
+Accept: application/ld+json
+
+###
+
+POST http://localhost:8000/api/categories
+Authorization: Basic contact@floran.fr changeme
+Content-Type: application/json
+
+{
+    "name": "test"
+}
+
+###
+
+PUT http://localhost:8000/api/categories/2
+Authorization: Basic contact@floran.fr changeme
+Content-Type: application/json
+
+{
+    "name": "nouvelle cat"
+}
+
+###
+
+DELETE http://localhost:8000/api/categories/1
+Authorization: Basic contact@floran.fr changeme
+Content-Type: application/json
+
+###

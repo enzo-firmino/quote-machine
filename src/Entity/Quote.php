@@ -7,19 +7,32 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 
 /**
  * @ORM\Entity(repositoryClass=QuoteRepository::class)
  *
  * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={"get"},
- *     normalizationContext={"groups"={"quote:read"}},
+ *     collectionOperations={
+ *         "get",
+ *         "post"={"security"="is_granted('ROLE_USER')", "security_message"="Only logged users can add quotes."}
+ *     },
+ *     itemOperations={
+ *         "get",
+ *         "put"={"security"="is_granted('ROLE_USER')", "security_message"="Only logged users can edit quotes."},
+ *         "patch"={"security"="is_granted('ROLE_USER')", "security_message"="Only logged users can edit quotes."},
+ *         "delete"={"security"="is_granted('ROLE_USER')", "security_message"="Only logged users can delete quotes."}
+ *     },
+ *     normalizationContext={"groups": {"quote:read"}}
  * )
+ *
+ * @ApiFilter(SearchFilter::class, properties={
+ *     "content": "partial",
+ *     "meta": "partial"
+ * })
  */
 class Quote
 {
@@ -33,7 +46,6 @@ class Quote
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups("quote:read")
-     * @ApiFilter(SearchFilter::class, strategy="partial")
      * @Assert\NotBlank
      * @Assert\Length(max=255)
      */
@@ -41,7 +53,6 @@ class Quote
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @ApiFilter(SearchFilter::class, strategy="partial")
      * @Groups("quote:read")
      * @Assert\NotBlank
      * @Assert\Length(max=255)

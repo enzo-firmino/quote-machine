@@ -5,14 +5,13 @@ namespace App\Controller;
 use App\Entity\Quote;
 use App\Event\QuoteCreated;
 use App\Form\QuoteType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
 
 class QuoteController extends AbstractController
 {
@@ -42,6 +41,7 @@ class QuoteController extends AbstractController
      * @Route("/quotes/new", name="quote_new", methods={"GET", "POST"})
      *
      * @IsGranted("ROLE_USER")
+     *
      * @param Request $request
      * @param EventDispatcherInterface $eventDispatcher
      * @return RedirectResponse|Response
@@ -60,6 +60,9 @@ class QuoteController extends AbstractController
             $entityManager->flush();
             $event = new QuoteCreated($quote);
             $eventDispatcher->dispatch($event);
+
+            $eventDispatcher->dispatch();
+
             return $this->redirectToRoute('quote_index');
         }
 
@@ -71,10 +74,6 @@ class QuoteController extends AbstractController
 
     /**
      * @Route("/quotes/{id}/edit", name="quote_edit", methods={"GET", "POST"})
-     *
-     * @param Request $request
-     * @param Quote $quote
-     * @return Response
      */
     public function edit(Request $request, Quote $quote): Response
     {
@@ -83,7 +82,6 @@ class QuoteController extends AbstractController
         $form->handleRequest($request);
 
         $this->denyAccessUnlessGranted('edit', $quote);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
@@ -99,13 +97,9 @@ class QuoteController extends AbstractController
 
     /**
      * @Route("/quotes/{id}/delete", name="quote_delete", methods={"GET"})
-     *
-     * @param Quote $quote
-     * @return Response
      */
     public function delete(Quote $quote): Response
     {
-
         $this->denyAccessUnlessGranted('delete', $quote);
 
         $entityManager = $this->getDoctrine()->getManager();
