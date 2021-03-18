@@ -31,7 +31,7 @@ class RandomQuoteCommand extends Command
             ->addOption(
                 'category',
                 null,
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 'Filter by category',
                 null
             )
@@ -48,9 +48,11 @@ class RandomQuoteCommand extends Command
         $res = $repo->random();
 
         if (null == $res) {
-            $io->error('No category found');
+            $io->error('No quote found');
+            return 0;
         } elseif (null != $input->getOption('category') && $input->getOption('category') != $res->getCategory()) {
             $io->error('Unknown "'.$input->getOption('category').'" category');
+            return 1;
         } else {
             $io->success('Random quote :');
             $io->text($res->getContent());
@@ -60,8 +62,7 @@ class RandomQuoteCommand extends Command
             if (null != $input->getOption('category')) {
                 $io->text($input->getOption('category'));
             }
+            return 0;
         }
-
-        return 0;
     }
 }

@@ -4,89 +4,129 @@ namespace App\Tests\Command;
 
 // ...
 
+use App\Entity\Category;
+use App\Entity\Quote;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class RandomQuoteCommandTest extends KernelTestCase
 {
+    /**
+     * @var Application
+     */
+    private $application;
+
+    public function setUp(): void
+    {
+        $kernel = static::bootKernel();
+        $this->application = new Application($kernel);
+    }
+
     public function test_no_category()
     {
-        $kernel = static::createKernel();
-        $application = new Application($kernel);
+        $quote = (new Quote())->setContent('Vous savez c\'que c\'est, mon problème ? Trop gentil.')
+            ->setMeta('Léodagan, Kaamelott, Livre II, Le complot')
+            ->setAuteur($this->createUser());
+        $this->persistAndFlush($quote);
 
-        $command = $application->find('app:random-quote');
+        $command = $this->application->find('app:random-quote');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
-
-            '--some-option' => 'option_value',
         ]);
 
-        // la sortie de la commande dans la console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Username: Wouter', $output);
-
-        // ...
+        $this->assertStringContainsString('Vous savez c\'que c\'est, mon problème ? Trop gentil.', $output);
     }
- 
+
     public function test_with_category()
     {
-        $kernel = static::createKernel();
-        $application = new Application($kernel);
+        $quote = (new Quote())->setContent('Test quote quote')
+            ->setMeta('Oui oui,')
+            ->setAuteur($this->createUser());
+        $this->persistAndFlush($quote);
 
-        $command = $application->find('app:random-quote');
+        $quote = (new Quote())->setContent('Vous savez c\'que c\'est, mon problème ? Trop gentil.')
+            ->setMeta('Léodagan, Kaamelott, Livre II, Le complot')
+            ->setCategory($this->createCategory())
+            ->setAuteur($this->createUser());
+        $this->persistAndFlush($quote);
+
+        $command = $this->application->find('app:random-quote');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
-
-            '--some-option' => 'option_value',
+            '--category' => 'Kaamelott',
         ]);
 
-        // la sortie de la commande dans la console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Username: Wouter', $output);
-
-        // ...
+        $this->assertStringContainsString('Vous savez c\'que c\'est, mon problème ? Trop gentil.', $output);
     }
 
-    public function test_no_category()
+    public function test_with_false_category()
     {
-        $kernel = static::createKernel();
-        $application = new Application($kernel);
+        $quote = (new Quote())->setContent('Test quote quote')
+            ->setMeta('Oui oui,')
+            ->setAuteur($this->createUser());
+        $this->persistAndFlush($quote);
 
-        $command = $application->find('app:random-quote');
+        $command = $this->application->find('app:random-quote');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
-
-            '--some-option' => 'option_value',
+            '--category' => 'Kamelote',
         ]);
 
         // la sortie de la commande dans la console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Username: Wouter', $output);
+        $this->assertStringContainsString('Unknown Kamelote category', $output);
 
-        // ...
     }
 
-    public function test_no_category()
+    public function test_no_quote()
     {
-        $kernel = static::createKernel();
-        $application = new Application($kernel);
-
-        $command = $application->find('app:random-quote');
+        $command = $this->application->find('app:random-quote');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
-
-            '--some-option' => 'option_value',
         ]);
 
-        // la sortie de la commande dans la console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Username: Wouter', $output);
+        $this->assertStringContainsString('Aucune citation trouvée', $output);
+    }
 
-        // ...
+    private function createUser(): User
+    {
+        $user = (new User())
+            ->setName('Robert')
+            ->setPassword('azerty')
+            ->setEmail('robert@robert');
+
+        $this->persistAndFlush($user);
+
+        return $user;
+    }
+
+    private function createCategory(): Category
+    {
+        $category = (new Category())
+            ->setName('Kaamelott');
+
+        $this->persistAndFlush($category);
+
+        return $category;
+    }
+
+    private function persistAndFlush($entity): void
+    {
+        $em = $this->application->getKernel()
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager();
+
+        $em->persist($entity);
+        $em->flush();
     }
 }

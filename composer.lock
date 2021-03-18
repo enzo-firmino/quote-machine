@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f7f3be776802d20f1848ca91ec29bed",
+    "content-hash": "fda4d6b399c327bdfa931e0261b8e88a",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4614,16 +4614,16 @@
         },
         {
             "name": "symfony/mailer",
-            "version": "v4.4.13",
+            "version": "v4.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mailer.git",
-                "reference": "ad570d866132ff13e37a6587fe468d1d814c0a70"
+                "reference": "df3209aaa4008b9bb851410ab31be12d9b744773"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mailer/zipball/ad570d866132ff13e37a6587fe468d1d814c0a70",
-                "reference": "ad570d866132ff13e37a6587fe468d1d814c0a70",
+                "url": "https://api.github.com/repos/symfony/mailer/zipball/df3209aaa4008b9bb851410ab31be12d9b744773",
+                "reference": "df3209aaa4008b9bb851410ab31be12d9b744773",
                 "shasum": ""
             },
             "require": {
@@ -4649,11 +4649,6 @@
                 "symfony/sendgrid-mailer": "^4.4|^5.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.4-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Mailer\\": ""
@@ -4676,7 +4671,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony Mailer Component",
+            "description": "Helps sending emails",
             "homepage": "https://symfony.com",
             "funding": [
                 {
@@ -4692,7 +4687,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-19T17:05:08+00:00"
+            "time": "2021-02-22T15:36:50+00:00"
         },
         {
             "name": "symfony/mime",
